@@ -40,7 +40,6 @@ function getUserChoice() {
 function playRound() {
   let userScore = 0
   let computerScore = 0
-  let previousResult = 0
 
   function displayScores() {
     console.log(`Scores on the doors: 
@@ -48,7 +47,7 @@ function playRound() {
         Computer: ${computerScore}`)
   }
 
-  function playRound(userChoice, computerChoice, previousResult) {
+  function playRound(userChoice, computerChoice) {
     switch (computerChoice) {
       case "rock":
         if (userChoice === "paper") {
