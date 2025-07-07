@@ -112,6 +112,7 @@ function playRound() {
   } else {
     console.log("You lose the game!")
   }
+  console.log("Refresh to play again!")
 }
 
 playRound()
