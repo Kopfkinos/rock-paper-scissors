@@ -1,89 +1,21 @@
-/* function playGame() {
-  let userScore = 0
-  let computerScore = 0
-
-  function displayScores() {
-    console.log(`Scores on the doors:
-        You: ${userScore}
-        Computer: ${computerScore}`)
-  }
-
-  function playRound(userChoice, computerChoice) {
-    switch (computerChoice) {
-      case "rock":
-        if (userChoice === "paper") {
-          console.log("You win! Paper beats rock!")
-          userScore++
-        } else if (userChoice === "scissors") {
-          console.log("You lose! Rock beats scissors!")
-          computerScore++
-        } else {
-          console.log("Draw! Computer also chose rock!")
-        }
-        break
-      case "paper":
-        if (userChoice === "scissors") {
-          console.log("You win! Scissors beat paper!")
-          userScore++
-        } else if (userChoice === "rock") {
-          console.log("You lose! Paper beats rock!")
-          computerScore++
-        } else {
-          console.log("Draw! Computer also chose paper!")
-        }
-        break
-      case "scissors":
-        if (userChoice === "rock") {
-          console.log("You win! Rock beat scissors!")
-          userScore++
-        } else if (userChoice === "paper") {
-          console.log("You lose! Scissors beats paper!")
-          computerScore++
-        } else {
-          console.log("Draw! Computer also chose scissors!")
-        }
-        break
-    }
-    displayScores()
-  }
-
-  for (i = 0; i < 5; i++) {
-    let userChoice = getUserChoice()
-    if (userChoice === null) {
-      break
-    }
-    if (!userChoice) {
-      i--
-      continue
-    }
-    let computerChoice = getComputerChoice()
-    playRound(userChoice, computerChoice)
-  }
-
-  if (userScore === 0) {
-    console.log("Okay then, refresh the page if you'd like to restart the game.")
-    return
-  }
-
-  if (userScore > computerScore) {
-    console.log("You win the game!")
-  } else if (userScore === computerScore) {
-    console.log("It's a draw!")
-  } else {
-    console.log("You lose the game!")
-  }
-  console.log("Refresh to play again!")
-}
-
-playGame() */
-
 const buttonsContainer = document.querySelector("#buttons-container")
 const instruction = document.querySelector("#instruction")
 const results = document.querySelector("#results")
+const scores = document.querySelector("#scores")
 
 const computerPlayed = document.createElement("p")
 const userPlayed = document.createElement("p")
 const roundResult = document.createElement("h2")
+
+const roundNumText = document.createElement("p")
+const roundNum = 0
+roundNumText.textContent = `Round: ${roundNum}/5`
+const scoresTitle = document.createElement("h3")
+scoresTitle.textContent = "Scores on the doors..."
+const computerScore = document.createElement("p")
+computerScore.textContent = "Computer score: "
+const userScore = document.createElement("p")
+userScore.textContent = "User score: "
 
 const startButton = document.querySelector("#startButton")
 startButton.addEventListener("click", (e) => {
@@ -108,47 +40,60 @@ function createRPSButtons() {
   })
 }
 
-function playRound(userChoice, computerChoice) {
-  instruction.remove()
-  computerPlayed.textContent = `Computer drew ${computerChoice}`
-  userPlayed.textContent = `User drew ${userChoice}`
-  switch (computerChoice) {
-    case "rock":
-      if (userChoice === "paper") {
-        roundResult.textContent = "You win! Paper beats rock!"
-        // userScore++
-      } else if (userChoice === "scissors") {
-        roundResult.textContent = "You lose! Rock beats scissors!"
-        // computerScore++
-      } else {
-        roundResult.textContent = "Draw! Computer also chose rock!"
-      }
-      break
-    case "paper":
-      if (userChoice === "scissors") {
-        roundResult.textContent = "You win! Scissors beat paper!"
-        // userScore++
-      } else if (userChoice === "rock") {
-        roundResult.textContent = "You lose! Paper beats rock!"
-        // computerScore++
-      } else {
-        roundResult.textContent = "Draw! Computer also chose paper!"
-      }
-      break
-    case "scissors":
-      if (userChoice === "rock") {
-        roundResult.textContent = "You win! Rock beat scissors!"
-        // userScore++
-      } else if (userChoice === "paper") {
-        roundResult.textContent = "You lose! Scissors beats paper!"
-        // computerScore++
-      } else {
-        roundResult.textContent = "Draw! Computer also chose scissors!"
-      }
-      break
+let userScoreTally = 0
+let computerScoreTally = 0
+
+function playGame(userChoice, computerChoice) {
+  function updateScores() {
+    computerScore.textContent = `Computer score: ${computerScoreTally}`
+    userScore.textContent = `User score: ${userScoreTally}`
   }
 
-  results.append(computerPlayed, userPlayed, roundResult)
+  function playRound(userChoice, computerChoice) {
+    instruction.remove()
+    computerPlayed.textContent = `Computer drew ${computerChoice}`
+    userPlayed.textContent = `User drew ${userChoice}`
+    switch (computerChoice) {
+      case "rock":
+        if (userChoice === "paper") {
+          roundResult.textContent = "You win! Paper beats rock!"
+          userScoreTally++
+        } else if (userChoice === "scissors") {
+          roundResult.textContent = "You lose! Rock beats scissors!"
+          computerScoreTally++
+        } else {
+          roundResult.textContent = "Draw! Computer also chose rock!"
+        }
+        break
+      case "paper":
+        if (userChoice === "scissors") {
+          roundResult.textContent = "You win! Scissors beat paper!"
+          userScoreTally++
+        } else if (userChoice === "rock") {
+          roundResult.textContent = "You lose! Paper beats rock!"
+          computerScoreTally++
+        } else {
+          roundResult.textContent = "Draw! Computer also chose paper!"
+        }
+        break
+      case "scissors":
+        if (userChoice === "rock") {
+          roundResult.textContent = "You win! Rock beat scissors!"
+          userScoreTally++
+        } else if (userChoice === "paper") {
+          roundResult.textContent = "You lose! Scissors beats paper!"
+          computerScoreTally++
+        } else {
+          roundResult.textContent = "Draw! Computer also chose scissors!"
+        }
+        break
+    }
+
+    results.append(computerPlayed, userPlayed, roundResult)
+  }
+
+  playRound(userChoice, computerChoice)
+  updateScores()
 }
 
 function getComputerChoice() {
@@ -188,11 +133,12 @@ function startGame() {
   instruction.textContent = "Choose your hand!"
   startButton.remove()
   createRPSButtons()
+  scores.append(computerScore, userScore, roundNumText)
   buttonsContainer.addEventListener("click", (e) => {
     if (e.target.id !== "buttons-container") {
       let playerChoice = getPlayerChoice(e)
       let computerChoice = getComputerChoice()
-      playRound(playerChoice, computerChoice)
+      playGame(playerChoice, computerChoice)
     }
   })
 }
