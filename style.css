@@ -1,0 +1,22 @@
+body {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(229, 245, 255);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+}
+
+section {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+button {
+  margin: 2px;
+}
