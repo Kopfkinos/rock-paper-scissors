@@ -69,7 +69,6 @@ function playGame() {
   }
 
   function playRound(userChoice, computerChoice) {
-    instruction.textContent = ""
     computerPlayed.textContent = `Computer drew ${computerChoice}`
     userPlayed.textContent = `User drew ${userChoice}`
     switch (computerChoice) {
