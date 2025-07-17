@@ -62,7 +62,6 @@ function playGame() {
     buttonsToClear.forEach((element) => {
       element.remove()
     })
-
     function getWinnerResult() {
       if (userScoreTally > computerScoreTally) {
         return "You win the game!"
@@ -119,7 +118,7 @@ function playGame() {
         }
         break
     }
-
+    results.setAttribute("class", "results-box")
     results.append(computerPlayed, userPlayed, roundResult)
     updateScores()
     if (roundNum === 5) {
@@ -130,10 +129,12 @@ function playGame() {
   instruction.textContent = "Choose your hand!"
   startButton.remove()
   createRPSButtons()
+  scores.setAttribute("class", "scores-box")
   scores.append(computerScore, userScore, roundNumText)
   buttonsContainer.addEventListener("click", (e) => {
     if (e.target.id === "restartBtn") {
       restartBtn.remove()
+      results.removeAttribute("class", "results-box")
       playGame()
     } else if (e.target.id !== "buttons-container") {
       let playerChoice = getPlayerChoice(e)
