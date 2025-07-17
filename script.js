@@ -8,7 +8,7 @@ const userPlayed = document.createElement("p")
 const roundResult = document.createElement("h2")
 
 const roundNumText = document.createElement("p")
-const roundNum = 0
+let roundNum = 0
 roundNumText.textContent = `Round: ${roundNum}/5`
 const scoresTitle = document.createElement("h3")
 scoresTitle.textContent = "Scores on the doors..."
@@ -20,7 +20,7 @@ userScore.textContent = "User score: "
 const startButton = document.querySelector("#startButton")
 startButton.addEventListener("click", (e) => {
   e.stopPropagation()
-  startGame(e)
+  playGame()
 })
 
 function createRPSButtons() {
@@ -43,14 +43,33 @@ function createRPSButtons() {
 let userScoreTally = 0
 let computerScoreTally = 0
 
-function playGame(userChoice, computerChoice) {
+function playGame() {
   function updateScores() {
     computerScore.textContent = `Computer score: ${computerScoreTally}`
     userScore.textContent = `User score: ${userScoreTally}`
+    roundNum++
+    roundNumText.textContent = `Round: ${roundNum}/5`
+  }
+
+  function endGame() {
+    const buttonsToClear = document.querySelectorAll("#buttons-container button")
+    const toClear = [computerPlayed, userPlayed, roundResult, ...buttonsToClear]
+    toClear.forEach((element) => {
+      element.remove()
+    })
+    let winnerMsg
+    if (userScore > computerScore) {
+      winnerMsg = "You win the game!"
+    } else if (userScore === computerScore) {
+      winnerMsg = "It's a draw!"
+    } else {
+      winnerMsg = "You lose the game!"
+    }
+    instruction.textContent = winnerMsg
   }
 
   function playRound(userChoice, computerChoice) {
-    instruction.remove()
+    instruction.textContent = ""
     computerPlayed.textContent = `Computer drew ${computerChoice}`
     userPlayed.textContent = `User drew ${userChoice}`
     switch (computerChoice) {
@@ -90,10 +109,23 @@ function playGame(userChoice, computerChoice) {
     }
 
     results.append(computerPlayed, userPlayed, roundResult)
+    updateScores()
+    if (roundNum === 5) {
+      endGame()
+    }
   }
 
-  playRound(userChoice, computerChoice)
-  updateScores()
+  instruction.textContent = "Choose your hand!"
+  startButton.remove()
+  createRPSButtons()
+  scores.append(computerScore, userScore, roundNumText)
+  buttonsContainer.addEventListener("click", (e) => {
+    if (e.target.id !== "buttons-container") {
+      let playerChoice = getPlayerChoice(e)
+      let computerChoice = getComputerChoice()
+      playRound(playerChoice, computerChoice)
+    }
+  })
 }
 
 function getComputerChoice() {
@@ -102,13 +134,10 @@ function getComputerChoice() {
 
   switch (num) {
     case 0:
-      console.log(message, "rock")
       return "rock"
     case 1:
-      console.log(message, "paper")
       return "paper"
     case 2:
-      console.log(message, "scissors")
       return "scissors"
   }
 }
@@ -118,47 +147,12 @@ function getPlayerChoice(e) {
 
   switch (target.id) {
     case "rock":
-      console.log("rock")
-      return "rock"
-    case "paper":
-      console.log("paper")
-      return "paper"
-    case "scissors":
-      console.log("scissors")
-      return "scissors"
-  }
-}
-
-function startGame() {
-  instruction.textContent = "Choose your hand!"
-  startButton.remove()
-  createRPSButtons()
-  scores.append(computerScore, userScore, roundNumText)
-  buttonsContainer.addEventListener("click", (e) => {
-    if (e.target.id !== "buttons-container") {
-      let playerChoice = getPlayerChoice(e)
-      let computerChoice = getComputerChoice()
-      playGame(playerChoice, computerChoice)
-    }
-  })
-}
-
-/* const userChoice = prompt("Choose rock, paper or scissors")
-
-  if (userChoice === null) {
-    return null
-  }
-
-  userChoice.toLowerCase()
-
-  switch (userChoice) {
-    case "rock":
       return "rock"
     case "paper":
       return "paper"
     case "scissors":
       return "scissors"
-    default:
-      console.log("You didn't choose a valid input! Try typing rock, paper or scissors.")
-      return 0
-  } */
+  }
+}
+
+function startGame() {}
